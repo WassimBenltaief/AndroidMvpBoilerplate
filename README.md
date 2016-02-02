@@ -1,4 +1,4 @@
-# Android Mv Boilerplate
+# Android Mvp Boilerplate
 
 Sample Android ap used as a reference for new Android projects. It demonstrates the mvp architecture with dependency injection, RxJava, unit testing and instrumentation.
 
