@@ -1,0 +1,84 @@
+package com.wassim.androidmvpbase.ui.views.main;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.wassim.androidmvpbase.R;
+import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.util.RecyclerViewClickListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+
+    private Context mContext;
+    private List<Movie> mMovies;
+    private RecyclerViewClickListener mListener;
+
+
+    public MoviesAdapter(Context mContext, RecyclerViewClickListener mListener) {
+        this.mContext = mContext;
+        this.mListener = mListener;
+        this.mMovies = new ArrayList<>();
+    }
+
+    public void setMovies(List<Movie> movies) {
+        this.mMovies = movies;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_movie, parent, false);
+        ViewHolder viewHolder = new ViewHolder(v);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Movie movie = mMovies.get(position);
+        Picasso.with(mContext).load(movie.getImage()).into(holder.movieImage);
+        holder.movieTitle.setText(movie.getTitle());
+        holder.movieGenre.setText(movie.getGenre());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mMovies.size();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @Bind(R.id.movie_image)
+        ImageView movieImage;
+        @Bind(R.id.movie_title)
+        TextView movieTitle;
+        @Bind(R.id.movie_genre)
+        TextView movieGenre;
+        @Bind(R.id.item_container)
+        LinearLayout itemContainer;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            itemContainer.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mListener.recyclerViewListClicked(v, this.getLayoutPosition(), v.getId());
+        }
+    }
+
+}

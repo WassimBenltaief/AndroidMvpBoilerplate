@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AndroidBoilerPlate</string>
+    <string name="action_settings">Settings</string>
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_action_cancel">Cancel</string>
+    <string name="dialog_error_title">Sorry</string>
+    <string name="empty_movies">There aren\'t any movies</string>
+    <string name="error_loading_movies">There was a problem loading the movies</string>
+    <string name="title_activity_single_movie">SingleMovieActivity</string>
+    <string name="movie_added_fav">Movie added to favorites.</string>
+    <string name="movie_removed_fav">Movie removed from favorites.</string>
+    <string name="genre">Genre: </string>
+    <string name="rating">Rating:</string>
+    <string name="synopsis">Synopsis:</string>
+    <string name="movie_year">Release:</string>
+    <string name="loading">Loading</string>
+</resources>

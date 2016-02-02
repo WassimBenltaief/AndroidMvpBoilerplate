@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.wassim.androidmvpbase.ui.views.single.SingleMovieActivity"
+    tools:showIn="@layout/activity_single_movie">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/article_keylines"
+        android:paddingRight="@dimen/md_keylines"
+        android:paddingTop="@dimen/md_keylines">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorAccent"
+                android:text="@string/genre"
+                android:fontFamily="sans-serif-light"
+                android:textSize="@dimen/content_title"
+                android:layout_marginBottom="@dimen/medium_margin" />
+            <TextView
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/movie_genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/content_body"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorAccent"
+                android:text="@string/movie_year"
+                android:textSize="@dimen/content_title"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="@dimen/medium_margin" />
+            <TextView
+                android:id="@+id/movie_year"
+                android:fontFamily="sans-serif-light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/content_body"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorAccent"
+                android:text="@string/rating"
+                android:textSize="@dimen/content_title"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginBottom="@dimen/md_keylines" />
+            <TextView
+                android:id="@+id/movie_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:textSize="@dimen/content_body"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorAccent"
+            android:text="@string/synopsis"
+            android:textSize="@dimen/content_title"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginBottom="@dimen/md_keylines" />
+
+
+        <TextView
+            android:id="@+id/movie_synopsis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/content_body"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
