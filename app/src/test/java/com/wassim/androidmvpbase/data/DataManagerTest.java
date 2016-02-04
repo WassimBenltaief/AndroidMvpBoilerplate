@@ -5,9 +5,7 @@ import com.wassim.androidmvpbase.data.local.preferences.PreferencesHelper;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.data.remote.ApiService;
 import com.wassim.androidmvpbase.test.common.TestDataFactory;
-import com.wassim.androidmvpbase.ui.views.main.MainMvpView;
-import com.wassim.androidmvpbase.ui.views.main.MainPresenter;
-import com.wassim.androidmvpbase.util.EventPosterHelper;
+import com.wassim.androidmvpbase.util.RxEventBusHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +19,6 @@ import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -40,7 +37,7 @@ public class DataManagerTest {
     PreferencesHelper mPreferencesHelperMock;
 
     @Mock
-    EventPosterHelper mEventPosterMock;
+    RxEventBusHelper mEventPosterMock;
 
     private DataManager mDataManager;
 
