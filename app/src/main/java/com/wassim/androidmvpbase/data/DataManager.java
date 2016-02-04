@@ -4,7 +4,7 @@ import com.wassim.androidmvpbase.data.local.database.DatabaseHelper;
 import com.wassim.androidmvpbase.data.local.preferences.PreferencesHelper;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.data.remote.ApiService;
-import com.wassim.androidmvpbase.util.EventPosterHelper;
+import com.wassim.androidmvpbase.util.RxEventBusHelper;
 
 import java.util.List;
 
@@ -18,16 +18,16 @@ public class DataManager {
     private final ApiService mApiService;
     private final DatabaseHelper mDatabaseHelper;
     private final PreferencesHelper mPreferencesHelper;
-    private final EventPosterHelper mEventPoster;
+    private final RxEventBusHelper mEventPoster;
 
 
     @Inject
     public DataManager(ApiService apiService, PreferencesHelper preferencesHelper,
-                       DatabaseHelper databaseHelper, EventPosterHelper eventPosterHelper) {
+                       DatabaseHelper databaseHelper, RxEventBusHelper rxEventBusHelper) {
         mApiService = apiService;
         mPreferencesHelper = preferencesHelper;
         mDatabaseHelper = databaseHelper;
-        mEventPoster = eventPosterHelper;
+        mEventPoster = rxEventBusHelper;
     }
 
     public PreferencesHelper getPreferencesHelper() {
@@ -42,7 +42,7 @@ public class DataManager {
         return mDatabaseHelper;
     }
 
-    public EventPosterHelper getEventPoster() {
+    public RxEventBusHelper getEventPoster() {
         return mEventPoster;
     }
 
@@ -65,8 +65,7 @@ public class DataManager {
         return getApiService().getMovies().concatMap(new Func1<List<Movie>, Observable<Movie>>() {
             @Override
             public Observable<Movie> call(List<Movie> movies) {
-                // save in database and return
-                return Observable.from(movies);
+                return mDatabaseHelper.saveMovies(movies);
             }
         });
     }
