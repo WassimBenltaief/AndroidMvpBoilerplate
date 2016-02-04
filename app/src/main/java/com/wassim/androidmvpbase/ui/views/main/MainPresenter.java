@@ -36,7 +36,7 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        Timber.e(e, "MainPresenter.losadMovies.getMovies : " +
+                        Timber.e(e, "MainPresenter.loadMovies.getMovies : " +
                                     "There was an error loading the movies");
                         getMvpView().showError();
                     }
