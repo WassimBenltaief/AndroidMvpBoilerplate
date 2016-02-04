@@ -11,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 public class DataManager {
 
@@ -60,8 +61,18 @@ public class DataManager {
     }
 
 
-    public Observable<List<Movie>> getMovies() {
-        return getApiService().getMovies();
+    public Observable<Movie> getAndSaveMovies() {
+        return getApiService().getMovies().concatMap(new Func1<List<Movie>, Observable<Movie>>() {
+            @Override
+            public Observable<Movie> call(List<Movie> movies) {
+                // save in database and return
+                return Observable.from(movies);
+            }
+        });
+    }
+
+    public Observable<List<Movie>> getMovies(){
+        return getApiService().getMovies().distinct();
     }
 
 }
