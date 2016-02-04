@@ -13,7 +13,7 @@ Libraries and tools included:
 - [Butterknife](https://github.com/JakeWharton/butterknife)
 - [Timber](https://github.com/JakeWharton/timber)
 - [Picasso](http://square.github.io/picasso/)
-- [Otto](http://square.github.io/otto/) event bus
+- <del>Otto event bus</del> --> is deprecated in favor of RxJava and RxAndroid [Otto](http://square.github.io/otto/).
 - Functional tests with [Espresso](https://code.google.com/p/android-test-kit/wiki/Espresso)
 - [Robolectric](http://robolectric.org/)
 - [Mockito](http://mockito.org/)
