@@ -2,6 +2,7 @@ package com.wassim.androidmvpbase;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.StrictMode;
 
 import com.activeandroid.ActiveAndroid;
 import com.wassim.androidmvpbase.injection.component.ApplicationComponent;
@@ -16,6 +17,19 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         ActiveAndroid.initialize(this);
+        // enable strict mode in debug only
+        if(BuildConfig.DEBUG){
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+            );
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+            );
+        }
     }
 
     public static App get(Context context) {
