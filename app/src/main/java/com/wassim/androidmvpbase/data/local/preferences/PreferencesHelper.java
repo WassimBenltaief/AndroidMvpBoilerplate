@@ -7,7 +7,9 @@ import com.wassim.androidmvpbase.injection.ApplicationContext;
 import net.orange_box.storebox.StoreBox;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class PreferencesHelper {
     private Preferences mPreferences;
 

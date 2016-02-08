@@ -3,6 +3,7 @@ package com.wassim.androidmvpbase.ui.views.main;
 import com.wassim.androidmvpbase.data.DataManager;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.test.common.TestDataFactory;
+import com.wassim.androidmvpbase.util.RxEventBusHelper;
 import com.wassim.androidmvpbase.util.RxSchedulersOverrideRule;
 
 import org.junit.After;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -22,6 +24,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,6 +42,10 @@ public class MainPresenterTest {
 
     @Before
     public void setUp() {
+        RxEventBusHelper rxEventBusHelper = spy(RxEventBusHelper.class);
+        doReturn(rxEventBusHelper)
+                .when(mMockDataManager)
+                .getEventPoster();
         mMainPresenter = new MainPresenter(mMockDataManager);
         mMainPresenter.attachView(mMockMainMvpView);
     }
@@ -51,12 +58,17 @@ public class MainPresenterTest {
     @Test
     public void loadMoviesTest() {
         List<Movie> movies = TestDataFactory.makeMovies();
+
         doReturn(Observable.just(movies))
                 .when(mMockDataManager)
-                .getMovies();
+                .getCachedMovies();
 
-        mMainPresenter.loadMovies();
-        verify(mMockMainMvpView).showMovies(movies);
+        mMainPresenter.loadCashedMovies();
+        List<Movie> cachedandNewList = new ArrayList<>();
+        cachedandNewList.addAll(movies);
+
+
+        verify(mMockMainMvpView, times(1)).showMovies(movies);
         verify(mMockMainMvpView, never()).showEmpty();
         verify(mMockMainMvpView, never()).showError();
     }

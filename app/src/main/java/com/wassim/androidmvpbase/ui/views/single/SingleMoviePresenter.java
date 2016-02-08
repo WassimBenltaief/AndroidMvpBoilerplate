@@ -12,7 +12,6 @@ public class SingleMoviePresenter extends BasePresenter<SingleMovieMvpView> {
 
     private DataManager mDataManager;
 
-
     @Inject
     public SingleMoviePresenter(DataManager dataManager) {
         this.mDataManager = dataManager;

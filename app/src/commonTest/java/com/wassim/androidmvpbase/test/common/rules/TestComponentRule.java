@@ -37,7 +37,7 @@ public class TestComponentRule implements TestRule {
     }
 
     public DataManager getMockDataManager() {
-        return mTestComponent.dataManager();
+        return mTestComponent.datamanager();
     }
 
 

@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
     RecyclerView mRecyclerView;
     @Bind(R.id.swieRefresh)
     SwipeRefreshLayout mSwipeContainer;
-    private MoviesAdapter mAdater;
+    private MoviesAdapter mAdapter;
     private List<Movie> mMovies;
     private ProgressDialog mProgressDialog;
 
@@ -63,20 +63,23 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
         setSupportActionBar(mToolbar);
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
-        mAdater = new MoviesAdapter(this, this);
+        mAdapter = new MoviesAdapter(this, this);
         mRecyclerView.addItemDecoration(
                 new DividerItemDecoration(
                         this, LinearLayoutManager.VERTICAL)
                 );
-        mRecyclerView.setAdapter(mAdater);
+        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mPresenter.attachView(this);
-        mPresenter.loadMovies();
-        showProgress();
+
+        // mPresenter.loadCashedMovies();
+        // for testing purpose we count on SyncService to get
+        // list of movies and post a bus event to load the list
+
         mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPresenter.loadMovies();
+                mPresenter.loadCashedMovies();
             }
         });
     }
@@ -113,16 +116,16 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
     public void showMovies(List<Movie> movies) {
         hideProgress();
         mMovies = movies;
-        mAdater.setMovies(mMovies);
-        mAdater.notifyDataSetChanged();
+        mAdapter.setMovies(mMovies);
+        mAdapter.notifyDataSetChanged();
         mSwipeContainer.setRefreshing(false);
     }
 
     @Override
     public void showEmpty() {
         hideProgress();
-        mAdater.setMovies(Collections.<Movie>emptyList());
-        mAdater.notifyDataSetChanged();
+        mAdapter.setMovies(Collections.<Movie>emptyList());
+        mAdapter.notifyDataSetChanged();
         Toast.makeText(this, R.string.empty_movies, Toast.LENGTH_LONG).show();
     }
 
@@ -156,11 +159,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
 
     }
 
-    private void showProgress() {
+    @Override
+    public void showProgress() {
         mProgressDialog.show();
     }
 
-    private void hideProgress() {
+    @Override
+    public void hideProgress() {
         mProgressDialog.dismiss();
     }
 }

@@ -9,4 +9,6 @@ public interface MainMvpView extends MvpView {
     void showMovies(List<Movie> movies);
     void showEmpty();
     void showError();
+    void showProgress();
+    void hideProgress();
 }

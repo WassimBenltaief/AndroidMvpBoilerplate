@@ -3,6 +3,7 @@ package com.wassim.androidmvpbase.data;
 //**
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -12,6 +13,11 @@ import com.google.android.gms.gcm.OneoffTask;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
+import com.wassim.androidmvpbase.App;
+import com.wassim.androidmvpbase.data.model.Movie;
+
+import rx.Observer;
+import timber.log.Timber;
 
 /**
 * Created by ltaief on 10/22/2015.
@@ -29,16 +35,40 @@ public class SyncService extends GcmTaskService {
 
     @Override
     public int onRunTask(TaskParams taskParams) {
-         /*
-            do service operations here
-         */
+
+        final int result = GcmNetworkManager.RESULT_FAILURE;
+        Bundle extras = taskParams.getExtras();
+        final String taskName = taskParams.getTag().equals(GCM_ONEOFF_TAG) ?
+                "GCM_ONEOFF" : "GCM_REPEAT";
+
+        App.get(getApplicationContext())
+                .getComponent()
+                .datamanager()
+                .syncMovies()
+                .subscribe(new Observer<Movie>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("SyncService", "onRunTask.syncMovies "+taskName+" onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("SyncService", "onRunTask.syncMovies "+taskName+" Error"+e.getStackTrace());
+                        SyncService.scheduleOneOff(getApplicationContext());
+                    }
+
+                    @Override
+                    public void onNext(Movie movie) {
+                    }
+                });
+
         Log.d("Sync", "hitted");
         return GcmNetworkManager.RESULT_SUCCESS;
     }
 
     public static void scheduleRepeat(Context context) {
         //in this method, single Repeating task is scheduled
-        // (the target service that will be called is MyTaskService.class)
+        // (the target service that will be called is SyncServuce.class)
         try {
             PeriodicTask periodic = new PeriodicTask.Builder()
                     //specify target service - must extend GcmTaskService
@@ -67,7 +97,7 @@ public class SyncService extends GcmTaskService {
 
     public static void scheduleOneOff(Context context) {
         //in this method, single OneOff task is scheduled
-        // (the target service that will be called is MyTaskService.class)
+        // (the target service that will be called is SyncServuce.class)
         try {
             OneoffTask oneoff = new OneoffTask.Builder()
                     //specify target service - must extend GcmTaskService
@@ -77,7 +107,7 @@ public class SyncService extends GcmTaskService {
                     //executed between 0 - 10s from now
                     .setExecutionWindow(0, 1)
                     //set required network state, this line is optional
-                    .setRequiredNetwork(Task.NETWORK_STATE_ANY)
+                    .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
                     //request that charging must be connected, this line is optional
                     .setRequiresCharging(false)
                     //if another task with same tag is already scheduled, replace it with this task

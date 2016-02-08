@@ -116,4 +116,6 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+
 }
