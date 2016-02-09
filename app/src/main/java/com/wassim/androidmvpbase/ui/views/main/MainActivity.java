@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wassim.androidmvpbase.R;
@@ -41,6 +43,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
     RecyclerView mRecyclerView;
     @Bind(R.id.swieRefresh)
     SwipeRefreshLayout mSwipeContainer;
+    @Bind(R.id.network_status)
+    TextView mNetworkStatusTextView;
     private MoviesAdapter mAdapter;
     private List<Movie> mMovies;
     private ProgressDialog mProgressDialog;
@@ -71,8 +75,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mPresenter.attachView(this);
-
+        mPresenter.getNetworkStatus();
         // mPresenter.loadCashedMovies();
+        Toast.makeText(this, "waiting or Gcm Network Manager One Off Task", Toast.LENGTH_LONG).show();
         // for testing purpose we count on SyncService to get
         // list of movies and post a bus event to load the list
 
@@ -168,4 +173,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
     public void hideProgress() {
         mProgressDialog.dismiss();
     }
+
+    @Override
+    public void showNetworkStatus(boolean status) {
+        if(status){
+            mNetworkStatusTextView.setText(R.string.connected);
+            mNetworkStatusTextView.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
+        } else {
+            mNetworkStatusTextView.setText(R.string.network_disconnected);
+            mNetworkStatusTextView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+        }
+    }
+
+
 }

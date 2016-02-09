@@ -11,4 +11,5 @@ public interface MainMvpView extends MvpView {
     void showError();
     void showProgress();
     void hideProgress();
+    void showNetworkStatus(boolean status);
 }

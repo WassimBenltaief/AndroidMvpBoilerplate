@@ -8,6 +8,7 @@
     <dimen name="content_title">20sp</dimen>
     <dimen name="content_body">18sp</dimen>
     <dimen name="medium_margin">8dp</dimen>
+    <dimen name="small_margin">4dp</dimen>
 
     <!-- Default Typo sizes, per the Android Design guidelines. -->
     <dimen name="text_display4">112sp</dimen>
