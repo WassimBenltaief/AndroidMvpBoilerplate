@@ -99,9 +99,9 @@ public class DatabaseHelper {
                                 Log.d("DatabaseHelper","saveMovies.onCompleted send SyncTask");
                                 if(mEventPoster.hasObservers()) {
                                     Log.d("DatabaseHelper","RxBus has Observable");
-                                    mEventPoster.send(new SyncTask());
                                 }
                                 subscriber.onCompleted();
+                                mEventPoster.send(new SyncTask());
                             }
 
                             @Override
