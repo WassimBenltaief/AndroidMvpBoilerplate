@@ -21,7 +21,7 @@ import rx.subjects.Subject;
 @Singleton
 public class RxEventBusHelper {
 
-    private final PublishSubject _bus = PublishSubject.create();
+    private final Subject<Object, Object> _bus = new SerializedSubject<>(PublishSubject.create());
 
     @Inject
     public RxEventBusHelper() {
@@ -31,13 +31,7 @@ public class RxEventBusHelper {
      * Pass any event down to event listeners.
      */
     public void send(final Object object) {
-        Schedulers.io().createWorker().schedule(new Action0() {
-            @Override
-            public void call() {
-                _bus. onNext(object);
-            }
-        });
-
+       _bus. onNext(object);
     }
 
     /**
