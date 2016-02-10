@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.wassim.androidmvpbase.R;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.ui.base.BaseActivity;
@@ -26,6 +27,7 @@ import com.wassim.androidmvpbase.util.DialogFactory;
 import com.wassim.androidmvpbase.util.DividerItemDecoration;
 import com.wassim.androidmvpbase.util.RecyclerViewClickListener;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -76,11 +78,18 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mPresenter.attachView(this);
         mPresenter.getNetworkStatus();
-        // mPresenter.loadCashedMovies();
-        Toast.makeText(this, "waiting or Gcm Network Manager One Off Task", Toast.LENGTH_LONG).show();
+
+        // testing Gcm Network manager
         // for testing purpose we count on SyncService to get
         // list of movies and post a bus event to load the list
 
+        List<Movie> movies = makeMovies();
+        // mPresenter.loadCashedMovies();
+        showMovies(movies);
+        Toast.makeText(this, "waiting or Gcm Network Manager One Off Task", Toast.LENGTH_LONG)
+                .show();
+
+        // end testing Gcm Network manager
         mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -174,15 +183,63 @@ public class MainActivity extends BaseActivity implements MainMvpView, RecyclerV
         mProgressDialog.dismiss();
     }
 
+
+    // set Network status notification depending on Network Status
+    /** TODO
+     * add animation fade in fade out to the text view and get out the TextView from
+     * the CoordinatesLayout
+     */
+
+
     @Override
     public void showNetworkStatus(boolean status) {
         if(status){
             mNetworkStatusTextView.setText(R.string.connected);
-            mNetworkStatusTextView.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
+            mNetworkStatusTextView.setBackgroundColor(
+                    ContextCompat.getColor(this, R.color.light_green));
         } else {
             mNetworkStatusTextView.setText(R.string.network_disconnected);
-            mNetworkStatusTextView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+            mNetworkStatusTextView.setBackgroundColor(
+                    ContextCompat.getColor(this, R.color.colorAccent));
         }
+    }
+
+    // for testing the Gcm Network manager, we return first a fake cached data
+    // assign it to the Recycler and wait for the One Off Task to fire
+    private List<Movie> makeMovies() {
+        String jsonMovie = "{\n" +
+                "\"id\": 1,\n" +
+                "\"title\": \"Dawn of the Planet of the Apes\",\n" +
+                "\"image\": \"https://lh3.googleusercontent.com/-zzPZ3rv8IQs/Vq4Krg8TEDI/" +
+                "AAAAAAAAAp8/efWYKQxO_vQ/s800-Ic42/1.jpg\",\n" +
+                "\"rating\": 8.3,\n" +
+                "\"releaseYear\": 2014,\n" +
+                "\"genre\": \"Action\",\n" +
+                "\"synopsis\": \"A growing nation of genetically evolved apes led by Caesar " +
+                "is threatened by a band of human survivors of the devastating " +
+                "virus unleashed a decade earlier.\"\n" +
+                "}";
+
+        String jsonMovie2 = "{\n" +
+                "\"id\": 2,\n" +
+                "\"title\": \"District 9\",\n" +
+                "\"image\": \"https://lh3.googleusercontent.com/-K8J4efkHoQM/Vq4KsRTG1yI/" +
+                "AAAAAAAAAqU/UesoWr5cSu8/s800-Ic42/2.jpg\",\n" +
+                "\"rating\": 8,\n" +
+                "\"releaseYear\": 2009,\n" +
+                "\"genre\": \"Sci-Fi\",\n" +
+                "\"synopsis\": \"An extraterrestrial race forced to live in slum-like " +
+                "conditions on Earth suddenly finds a kindred spirit in a government agent " +
+                "who is exposed to their biotechnology.\"\n" +
+                "}";
+
+
+        Movie movie = new Gson().fromJson(jsonMovie, Movie.class);
+        Movie movie2 = new Gson().fromJson(jsonMovie2, Movie.class);
+        List<Movie> mMovies = new ArrayList<>();
+        mMovies.add(movie);
+        mMovies.add(movie2);
+        return mMovies;
     }
 
 

@@ -11,12 +11,14 @@ import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.test.common.TestDataFactory;
 import com.wassim.androidmvpbase.test.common.rules.TestComponentRule;
 import com.wassim.androidmvpbase.ui.views.main.MainActivity;
+import com.wassim.androidmvpbase.util.RxEventBusHelper;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
+import org.mockito.stubbing.Answer;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -59,7 +62,7 @@ public class MainActivityTest {
         List<Movie> movies = TestDataFactory.makeMovies();
         when(component.getMockDataManager().getMovies())
                 .thenReturn(Observable.just(movies));
-
+        when(component.getMockDataManager().getEventPoster()).thenReturn(new RxEventBusHelper());
         main.launchActivity(null);
 
         int position = 0;
