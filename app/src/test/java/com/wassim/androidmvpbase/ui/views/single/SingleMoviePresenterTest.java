@@ -1,6 +1,5 @@
 package com.wassim.androidmvpbase.ui.views.single;
 
-import com.wassim.androidmvpbase.data.DataManager;
 import com.wassim.androidmvpbase.data.model.Movie;
 
 import org.junit.After;
@@ -10,11 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,10 +17,10 @@ import static org.mockito.Mockito.when;
 public class SingleMoviePresenterTest {
 
     @Mock
-    SingleMovieMvpView mSingleMovieMvpView;
+    SingleMovieMvp.View mSingleMovieMvp;
 
     @Mock
-    DataManager mMockDataManager;
+    SingleMovieProvider mMockProvider;
 
     private SingleMoviePresenter mSingleMoviePresenter;
 
@@ -34,8 +29,8 @@ public class SingleMoviePresenterTest {
 
     @Before
     public void setUp() {
-        mSingleMoviePresenter = new SingleMoviePresenter(mMockDataManager);
-        mSingleMoviePresenter.attachView(mSingleMovieMvpView);
+        mSingleMoviePresenter = new SingleMoviePresenter(mMockProvider);
+        mSingleMoviePresenter.attachView(mSingleMovieMvp);
     }
 
     @After
@@ -49,13 +44,13 @@ public class SingleMoviePresenterTest {
         Movie movie = new Movie();
         movie.setId(1);
 
-        when(mMockDataManager.verifyMovie(movie.getId())).thenReturn(true);
+        when(mMockProvider.verifyMovie(movie.getId())).thenReturn(true);
         mSingleMoviePresenter.checkFavorites(movie);
-        verify(mSingleMovieMvpView).favoritesChecked(true, false);
+        verify(mSingleMovieMvp).favoritesChecked(true, false);
 
-        when(mMockDataManager.verifyMovie(movie.getId())).thenReturn(false);
+        when(mMockProvider.verifyMovie(movie.getId())).thenReturn(false);
         mSingleMoviePresenter.checkFavorites(movie);
-        verify(mSingleMovieMvpView).favoritesChecked(true, false);
+        verify(mSingleMovieMvp).favoritesChecked(true, false);
     }
 
     @Test
@@ -64,14 +59,14 @@ public class SingleMoviePresenterTest {
         Movie movie = new Movie();
         movie.setId(1);
 
-        when(mMockDataManager.verifyMovie(movie.getId())).thenReturn(true);
+        when(mMockProvider.verifyMovie(movie.getId())).thenReturn(true);
         mSingleMoviePresenter.modifyFavorites(movie);
 
-        verify(mMockDataManager).removeMovie(movie);
-        verify(mSingleMovieMvpView).favoritesChecked(false, true);
+        verify(mMockProvider).removeMovie(movie);
+        verify(mSingleMovieMvp).favoritesChecked(false, true);
 
-        verify(mMockDataManager, never()).addMovie(movie);
-        verify(mSingleMovieMvpView, never()).favoritesChecked(true, false);
+        verify(mMockProvider, never()).addMovie(movie);
+        verify(mSingleMovieMvp, never()).favoritesChecked(true, false);
     }
 
 }

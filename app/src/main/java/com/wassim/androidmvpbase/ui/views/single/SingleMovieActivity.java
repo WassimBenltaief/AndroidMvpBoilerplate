@@ -24,7 +24,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SingleMovieActivity extends BaseActivity implements SingleMovieMvpView {
+public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.View {
+
     // View name of the header image. Used for activity scene transitions
     public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
 

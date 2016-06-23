@@ -5,13 +5,13 @@ import android.content.Context;
 import android.os.StrictMode;
 
 import com.activeandroid.ActiveAndroid;
-import com.wassim.androidmvpbase.data.SyncService;
 import com.wassim.androidmvpbase.injection.component.ApplicationComponent;
 import com.wassim.androidmvpbase.injection.component.DaggerApplicationComponent;
 import com.wassim.androidmvpbase.injection.module.ApplicationModule;
 
 
 public class App extends Application {
+
     ApplicationComponent mApplicationComponent;
 
     @Override
@@ -31,7 +31,6 @@ public class App extends Application {
                 .build()
             );
         }
-        SyncService.scheduleOneOff(this);
     }
 
     public static App get(Context context) {

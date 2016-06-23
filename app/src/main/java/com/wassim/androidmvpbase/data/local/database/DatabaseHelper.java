@@ -1,12 +1,8 @@
 package com.wassim.androidmvpbase.data.local.database;
 
-import android.util.Log;
-
-import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.wassim.androidmvpbase.data.local.preferences.PreferencesHelper;
 import com.wassim.androidmvpbase.data.model.Movie;
-import com.wassim.androidmvpbase.data.model.SyncTask;
 import com.wassim.androidmvpbase.util.RxEventBusHelper;
 
 import java.util.List;
@@ -15,13 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
 @Singleton
 public class DatabaseHelper {
@@ -36,11 +26,10 @@ public class DatabaseHelper {
     }
 
     public DBMovie findMovie(int remoteId) {
-        DBMovie dbMovie = new Select()
+        return new Select()
                 .from(DBMovie.class)
                 .where("mRemoteId = ?", remoteId)
                 .executeSingle();
-            return dbMovie;
     }
 
     public Observable<Movie> loadMovies() {
@@ -85,37 +74,13 @@ public class DatabaseHelper {
     }
 
     public Observable<Movie> saveMovies(final List<Movie> movies) {
-        return Observable.create(new Observable.OnSubscribe<Movie>() {
-            @Override
-            public void call(final Subscriber<? super Movie> subscriber) {
-                if (subscriber.isUnsubscribed()) return;
-                Observable.from(movies)
-                        .observeOn(Schedulers.io())
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Movie>() {
-                            @Override
-                            public void onCompleted() {
-                                Log.d("DatabaseHelper","saveMovies.onCompleted");
-                                Log.d("DatabaseHelper","saveMovies.onCompleted send SyncTask");
-                                if(mEventPoster.hasObservers()) {
-                                    Log.d("DatabaseHelper","RxBus has Observable");
-                                }
-                                subscriber.onCompleted();
-                                mEventPoster.send(new SyncTask());
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Timber.w(e, "Error syncing");
-                            }
-
-                            @Override
-                            public void onNext(Movie movie) {
-                                addMovie(movie);
-                                subscriber.onNext(movie);
-                            }
-                        });
-            }
-        });
+        return Observable.from(movies)
+                .concatMap(new Func1<Movie, Observable<Movie>>() {
+                    @Override
+                    public Observable<Movie> call(Movie movie) {
+                        addMovie(movie);
+                        return Observable.just(movie);
+                    }
+                });
     }
 }

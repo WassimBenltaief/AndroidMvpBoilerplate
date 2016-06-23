@@ -13,11 +13,6 @@ import com.google.android.gms.gcm.OneoffTask;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
-import com.wassim.androidmvpbase.App;
-import com.wassim.androidmvpbase.data.model.Movie;
-
-import rx.Observer;
-import timber.log.Timber;
 
 /**
 * Created by ltaief on 10/22/2015.
@@ -40,27 +35,6 @@ public class SyncService extends GcmTaskService {
         Bundle extras = taskParams.getExtras();
         final String taskName = taskParams.getTag().equals(GCM_ONEOFF_TAG) ?
                 "GCM_ONEOFF" : "GCM_REPEAT";
-
-        App.get(getApplicationContext())
-                .getComponent()
-                .datamanager()
-                .syncMovies()
-                .subscribe(new Observer<Movie>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d("SyncService", "onRunTask.syncMovies "+taskName+" onCompleted");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("SyncService", "onRunTask.syncMovies "+taskName+" Error"+e.getStackTrace());
-                        SyncService.scheduleOneOff(getApplicationContext());
-                    }
-
-                    @Override
-                    public void onNext(Movie movie) {
-                    }
-                });
 
         Log.d("Sync", "hitted");
         return GcmNetworkManager.RESULT_SUCCESS;

@@ -6,13 +6,8 @@ import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.data.remote.ApiService;
 import com.wassim.androidmvpbase.util.RxEventBusHelper;
 
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import rx.Observable;
-import rx.functions.Func1;
 
 @Singleton
 public class DataManager {
@@ -47,34 +42,12 @@ public class DataManager {
         return mEventPoster;
     }
 
-    public boolean verifyMovie(int id){
-        return getDatabaseHelper().findMovie(id) == null ? false : true;
-    }
-
     public void removeMovie(Movie movie){
         mDatabaseHelper.removeMovie(movie);
     }
 
     public void addMovie(Movie movie){
         mDatabaseHelper.addMovie(movie);
-    }
-
-    public Observable<Movie> syncMovies() {
-        return mApiService.getMovies()
-                .concatMap(new Func1<List<Movie>, Observable<Movie>>() {
-                    @Override
-                    public Observable<Movie> call(List<Movie> movies) {
-                        return mDatabaseHelper.saveMovies(movies);
-                    }
-                });
-    }
-
-    public Observable<List<Movie>> getMovies(){
-        return mApiService.getMovies().distinct();
-    }
-
-    public Observable<List<Movie>> getCachedMovies(){
-        return mDatabaseHelper.loadMovies().toList();
     }
 
 }

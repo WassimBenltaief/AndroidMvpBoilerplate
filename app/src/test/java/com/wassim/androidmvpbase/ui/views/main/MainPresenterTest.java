@@ -1,6 +1,5 @@
 package com.wassim.androidmvpbase.ui.views.main;
 
-import com.wassim.androidmvpbase.data.DataManager;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.test.common.TestDataFactory;
 import com.wassim.androidmvpbase.util.RxEventBusHelper;
@@ -19,9 +18,7 @@ import java.util.List;
 
 import rx.Observable;
 
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -31,9 +28,9 @@ import static org.mockito.Mockito.verify;
 public class MainPresenterTest {
 
     @Mock
-    MainMvpView mMockMainMvpView;
+    MainMvp.View mMockMainMvp;
 
-    @Mock DataManager mMockDataManager;
+    @Mock MainProvider mMockProvider;
 
     private MainPresenter mMainPresenter;
 
@@ -43,11 +40,8 @@ public class MainPresenterTest {
     @Before
     public void setUp() {
         RxEventBusHelper rxEventBusHelper = spy(RxEventBusHelper.class);
-        doReturn(rxEventBusHelper)
-                .when(mMockDataManager)
-                .getEventPoster();
-        mMainPresenter = new MainPresenter(mMockDataManager);
-        mMainPresenter.attachView(mMockMainMvpView);
+        mMainPresenter = new MainPresenter(mMockProvider);
+        mMainPresenter.attachView(mMockMainMvp);
     }
 
     @After
@@ -60,16 +54,16 @@ public class MainPresenterTest {
         List<Movie> movies = TestDataFactory.makeMovies();
 
         doReturn(Observable.just(movies))
-                .when(mMockDataManager)
-                .getCachedMovies();
+                .when(mMockProvider)
+                .getMovies();
 
-        mMainPresenter.loadCashedMovies();
+        mMainPresenter.loadMovies();
         List<Movie> cachedandNewList = new ArrayList<>();
         cachedandNewList.addAll(movies);
 
 
-        verify(mMockMainMvpView, times(1)).showMovies(movies);
-        verify(mMockMainMvpView, never()).showEmpty();
-        verify(mMockMainMvpView, never()).showError();
+        verify(mMockMainMvp, times(1)).showMovies(movies);
+        verify(mMockMainMvp, never()).showEmpty();
+        verify(mMockMainMvp, never()).showError();
     }
 }
