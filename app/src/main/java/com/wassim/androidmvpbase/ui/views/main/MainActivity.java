@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.wassim.androidmvpbase.MovieModel;
 import com.wassim.androidmvpbase.R;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.ui.base.BaseActivity;
@@ -136,9 +137,9 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
 
     @Override
     public void recyclerViewListClicked(View v, int position, int id) {
-        Movie movie = mMovies.get(position);
+        MovieModel movie = mMovies.get(position);
         Intent intent = new Intent(this, SingleMovieActivity.class);
-        intent.putExtra("movie", movie);
+        intent.putExtra("movie", movie.id());
 
         ActivityOptionsCompat activityOptions =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(

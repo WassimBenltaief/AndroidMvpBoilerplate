@@ -19,7 +19,7 @@ class SingleMovieProvider extends BaseProvider<SingleMovieMvp.Presenter> {
         this.mDataManager = dataManager;
     }
 
-    Boolean verifyMovie(int id) {
+    Boolean verifyMovie(long id) {
         return mDataManager.getDatabaseHelper().findMovie(id) != null;
     }
 

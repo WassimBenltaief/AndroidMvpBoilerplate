@@ -3,6 +3,7 @@ package com.wassim.androidmvpbase.injection.component;
 import android.app.Application;
 import android.content.Context;
 
+import com.squareup.sqlbrite.BriteDatabase;
 import com.wassim.androidmvpbase.data.DataManager;
 import com.wassim.androidmvpbase.data.local.preferences.PreferencesHelper;
 import com.wassim.androidmvpbase.data.remote.ApiService;
@@ -30,5 +31,7 @@ public interface ApplicationComponent {
     PreferencesHelper preferencesHelper();
 
     DataManager datamanager();
+
+    BriteDatabase briteDatabase();
 
 }

@@ -2,11 +2,12 @@ apply plugin: 'com.android.application'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.squareup.sqldelight'
 //apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         applicationId 'com.wassim.androidmvpbase'
@@ -64,6 +65,15 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    configurations.all {
+        resolutionStrategy.force 'com.android.support:support-annotations:23.4.0'
+    }
+
     //Needed because of this https://github.com/square/okio/issues/58
     lintOptions {
         warning 'InvalidPackage'
@@ -79,8 +89,8 @@ play {
 
 dependencies {
 
-    final PLAY_SERVICES_VERSION = '8.4.0'
-    final SUPPORT_LIBRARY_VERSION = '23.1.1'
+    final PLAY_SERVICES_VERSION = '9.0.0'
+    final SUPPORT_LIBRARY_VERSION = '23.4.0'
     final RETROFIT_VERSION = '2.0.0-beta3'
     final DAGGER_VERSION = '2.0.2'
     final DEXMAKER_VERSION = '1.4'
@@ -102,7 +112,11 @@ dependencies {
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+    compile 'com.android.support:support-annotations:23.4.0'
+
+
+    compile 'com.google.auto.value:auto-value:1.2'
+    compile 'com.squareup.sqlbrite:sqlbrite:0.7.0'
 
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
@@ -115,10 +129,14 @@ dependencies {
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     provided 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
 
+    apt "org.immutables:value:2.1.16" // <-- for annotation processor
+    provided "org.immutables:value:2.1.16" // <-- for annotation API
+    provided "org.immutables:gson:2.1.16" // for annotations
+
     // Tests compile
     androidTestCompile jUnit
     androidTestCompile mockito
-    androidTestCompile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+    androidTestCompile 'com.android.support:support-annotations:23.4.0'
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:$ESPRESSO_VERSION") {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'

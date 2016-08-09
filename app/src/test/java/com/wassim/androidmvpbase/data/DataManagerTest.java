@@ -25,7 +25,7 @@ public class DataManagerTest {
     @Before
     public void setUp() {
         mDataManager = new DataManager(mApiServiceMock, mPreferencesHelperMock,
-                mDatabaseHelperMock, mEventPosterMock);
+                mDatabaseHelperMock);
     }
 
     /*@Test

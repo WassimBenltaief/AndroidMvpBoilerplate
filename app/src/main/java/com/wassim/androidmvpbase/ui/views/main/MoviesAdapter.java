@@ -9,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wassim.androidmvpbase.R;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.util.RecyclerViewClickListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     public void setMovies(List<Movie> movies) {
-        this.mMovies = movies;
+        this.mMovies.clear();
+        this.mMovies.addAll(movies);
     }
 
     @Override
@@ -49,9 +50,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Movie movie = mMovies.get(position);
-        Picasso.with(mContext).load(movie.getImage()).into(holder.movieImage);
-        holder.movieTitle.setText(movie.getTitle());
-        holder.movieGenre.setText(movie.getGenre());
+        Picasso.with(mContext).load(movie.image()).into(holder.movieImage);
+        holder.movieTitle.setText(movie.title());
+        holder.movieGenre.setText(movie.genre());
     }
 
     @Override

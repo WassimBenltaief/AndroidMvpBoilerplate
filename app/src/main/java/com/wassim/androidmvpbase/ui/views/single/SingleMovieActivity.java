@@ -86,17 +86,17 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
     private void loadMovie() {
         addTransitionListener();
         loadFullSizeImage();
-        mCollapsingToolbar.setTitle(mMovie.getTitle());
-        mMovieGenre.setText(mMovie.getGenre());
-        mMovieYear.setText(mMovie.getReleaseYear() + "");
-        mMovieRating.setText(mMovie.getRating() + "");
-        mMovieSynopsis.setText(mMovie.getSynopsis());
+        mCollapsingToolbar.setTitle(mMovie.title());
+        mMovieGenre.setText(mMovie.genre());
+        mMovieYear.setText(mMovie.releaseYear() + "");
+        mMovieRating.setText(mMovie.rating() + "");
+        mMovieSynopsis.setText(mMovie.synopsis());
 
     }
 
     private void loadFullSizeImage() {
         Picasso.with(this)
-                .load(mMovie.getImage())
+                .load(mMovie.image())
                 .noFade()
                 .noPlaceholder()
                 .into(mImage);

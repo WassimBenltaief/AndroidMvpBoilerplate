@@ -1,5 +1,8 @@
 package com.wassim.androidmvpbase.data.remote;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.wassim.androidmvpbase.data.model.GsonAdaptersModel;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.util.Vars;
 
@@ -32,10 +35,15 @@ public interface ApiService {
     class Factory {
         public static ApiService create(OkHttpClient client) {
 
+            Gson gson = new GsonBuilder()
+                    .serializeNulls()
+                    .registerTypeAdapterFactory(new GsonAdaptersModel())
+                    .create();
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(Vars.ENDPOINT)
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
             return retrofit.create(ApiService.class);

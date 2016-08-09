@@ -1,4 +1,4 @@
-package com.wassim.androidmvpbase.data.model;
+package com.wassim.androidmvpbase.data.local;
 
 /**
  * Created by beltaief on 2/8/2016.

@@ -18,7 +18,7 @@ public class SingleMoviePresenter extends BasePresenter<SingleMovieMvp.View>
     }
 
     void checkFavorites(Movie movie) {
-        Boolean exist = mProvider.verifyMovie(movie.getId());
+        Boolean exist = mProvider.verifyMovie(movie.id());
         if (exist) {
             if(isViewAttached()) {
                 getMvpView().favoritesChecked(true, false);
@@ -32,7 +32,7 @@ public class SingleMoviePresenter extends BasePresenter<SingleMovieMvp.View>
 
 
     void modifyFavorites(Movie movie) {
-        Boolean exist = mProvider.verifyMovie(movie.getId());
+        Boolean exist = mProvider.verifyMovie(movie.id());
         if (exist) {
             mProvider.removeMovie(movie);
             if(isViewAttached()) {

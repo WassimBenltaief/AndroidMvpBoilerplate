@@ -3,6 +3,9 @@ package com.wassim.androidmvpbase.injection.module;
 import android.app.Application;
 import android.content.Context;
 
+import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite;
+import com.wassim.androidmvpbase.data.local.database.DBOpenHelper;
 import com.wassim.androidmvpbase.data.local.preferences.PreferencesHelper;
 import com.wassim.androidmvpbase.data.remote.ApiService;
 import com.wassim.androidmvpbase.data.remote.OkHttpHelper;
@@ -13,6 +16,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
+import rx.schedulers.Schedulers;
 
 /**
  * Provide application-level dependencies.
@@ -52,6 +56,15 @@ public class ApplicationModule {
     @Singleton
     PreferencesHelper providesPreferencesHelper(@ApplicationContext Context context){
         return new PreferencesHelper(context);
+    }
+
+    @Provides
+    @Singleton
+    BriteDatabase providesBriteDatabase(@ApplicationContext Context context){
+        SqlBrite sqlBrite = SqlBrite.create();
+        DBOpenHelper dbOpenHelper = new DBOpenHelper(context);
+        BriteDatabase db = sqlBrite.wrapDatabaseHelper(dbOpenHelper, Schedulers.io());
+        return db;
     }
 
 }

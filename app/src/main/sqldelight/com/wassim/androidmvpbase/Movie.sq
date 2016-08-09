@@ -1,0 +1,29 @@
+CREATE TABLE movie (
+	id INTEGER NOT NULL PRIMARY KEY,
+	title TEXT NOT NULL,
+	image TEXT NOT NULL,
+	rating REAL NOT NULL,
+	releaseYear INTEGER NOT NULL,
+	genre TEXT NOT NULL,
+	synopsis TEXT NOT NULL
+);
+
+
+select_all:
+SELECT *
+FROM movie;
+
+select_by_id:
+SELECT *
+FROM movie
+WHERE id = ?;
+
+select_by_title:
+SELECT *
+FROM movie
+WHERE title = ?;
+
+select_by_release_year:
+SELECT *
+FROM movie
+WHERE releaseYear = ?;

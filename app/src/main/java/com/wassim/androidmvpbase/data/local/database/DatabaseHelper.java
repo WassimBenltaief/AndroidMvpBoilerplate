@@ -1,6 +1,12 @@
 package com.wassim.androidmvpbase.data.local.database;
 
-import com.activeandroid.query.Select;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite.Query;
+import com.wassim.androidmvpbase.MovieModel;
 import com.wassim.androidmvpbase.data.local.preferences.PreferencesHelper;
 import com.wassim.androidmvpbase.data.model.Movie;
 import com.wassim.androidmvpbase.util.RxEventBusHelper;
@@ -15,62 +21,65 @@ import rx.functions.Func1;
 
 @Singleton
 public class DatabaseHelper {
+    private static final String TAG = DatabaseHelper.class.getSimpleName();
     private final PreferencesHelper mPreferencesHelper;
     private final RxEventBusHelper mEventPoster;
+    private final BriteDatabase mDb;
 
     @Inject
     public DatabaseHelper(PreferencesHelper preferencesHelper,
-                          RxEventBusHelper rxEventBusHelper) {
+                          RxEventBusHelper rxEventBusHelper, BriteDatabase db) {
         mPreferencesHelper = preferencesHelper;
         mEventPoster = rxEventBusHelper;
+        mDb = db;
     }
 
-    public DBMovie findMovie(int remoteId) {
-        return new Select()
-                .from(DBMovie.class)
-                .where("mRemoteId = ?", remoteId)
-                .executeSingle();
-    }
-
-    public Observable<Movie> loadMovies() {
-        List<DBMovie> movies = new Select().from(DBMovie.class).execute();
-        return Observable.from(movies)
-                .map(new Func1<DBMovie, Movie>() {
+    public Observable<Movie> findMovie(long remoteId) {
+        return mDb.createQuery(MovieModel.TABLE_NAME, Movie.SELECT_BY_ID, new String[]{"" + remoteId})
+                .map(new Func1<Query, Movie>() {
                     @Override
-                    public Movie call(DBMovie dbMovie) {
-                        Movie movie = new Movie();
-                        movie.setId(dbMovie.getRemoteId());
-                        movie.setGenre(dbMovie.getGenre());
-                        movie.setImage(dbMovie.getImage());
-                        movie.setRating(dbMovie.getRating());
-                        movie.setReleaseYear(dbMovie.getReleaseYear());
-                        movie.setSynopsis(dbMovie.getSynopsis());
-                        movie.setTitle(dbMovie.getTitle());
-                        return movie;
+                    public Movie call(Query query) {
+                        Cursor cursor = query.run();
+                        // TODO parse data...
+                        try {
+                            if (!cursor.moveToNext()) {
+                                throw new AssertionError("No rows");
+                            }
+                            return Movie.MAPPER_BY_ID.map(cursor);
+                        } finally {
+                            cursor.close();
+                        }
                     }
                 });
     }
 
-    public void addMovie(Movie movie) {
+    public Observable<Movie> loadMovies() {
+        return mDb.createQuery(MovieModel.TABLE_NAME, Movie.SELECT_BY_ID, new String[]{""})
+                .map(new Func1<Query, Movie>() {
+                    @Override
+                    public Movie call(Query query) {
+                        Cursor cursor = query.run();
+                        // TODO parse data...
+                        try {
+                            if (!cursor.moveToNext()) {
+                                throw new AssertionError("No rows");
+                            }
+                            return Movie.MAPPER_BY_ID.map(cursor);
+                        } finally {
+                            cursor.close();
+                        }
+                    }
+                });
+    }
 
-        if(findMovie(movie.getId())== null){
-            DBMovie dbMovie = new DBMovie();
-            dbMovie.setRemoteId(movie.getId());
-            dbMovie.setTitle(movie.getTitle());
-            dbMovie.setImage(movie.getImage());
-            dbMovie.setRating(movie.getRating());
-            dbMovie.setGenre(movie.getGenre());
-            dbMovie.setReleaseYear(movie.getReleaseYear());
-            dbMovie.setSynopsis(movie.getSynopsis());
-            dbMovie.save();
-        }
-
+    public void addMovie(MovieModel movie) {
+        long index = mDb.insert(MovieModel.TABLE_NAME,
+                Movie.FACTORY.marshal(movie).asContentValues(), SQLiteDatabase.CONFLICT_REPLACE);
+        Log.d(TAG, "index :" + index);
     }
 
     public void removeMovie(Movie movie) {
-        DBMovie dbMovie = findMovie(movie.getId());
-        if (dbMovie != null)
-            dbMovie.delete();
+        //mDb.delete(Movie.TABLE_NAME, Movie.ID + "?= ?s", movie.id());
     }
 
     public Observable<Movie> saveMovies(final List<Movie> movies) {

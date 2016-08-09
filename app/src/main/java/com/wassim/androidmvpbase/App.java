@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
-import com.activeandroid.ActiveAndroid;
 import com.wassim.androidmvpbase.injection.component.ApplicationComponent;
 import com.wassim.androidmvpbase.injection.component.DaggerApplicationComponent;
 import com.wassim.androidmvpbase.injection.module.ApplicationModule;
@@ -17,7 +16,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ActiveAndroid.initialize(this);
+
         // enable strict mode in debug only
         if(BuildConfig.DEBUG){
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()

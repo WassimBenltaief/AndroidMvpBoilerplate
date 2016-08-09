@@ -4,14 +4,17 @@ import android.app.Application;
 import android.content.Context;
 
 import com.squareup.otto.Bus;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.wassim.androidmvpbase.data.DataManager;
+import com.wassim.androidmvpbase.data.local.preferences.PreferencesHelper;
+import com.wassim.androidmvpbase.data.remote.ApiService;
+import com.wassim.androidmvpbase.injection.ApplicationContext;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import com.wassim.androidmvpbase.data.DataManager;
-import com.wassim.androidmvpbase.data.remote.ApiService;
-import com.wassim.androidmvpbase.injection.ApplicationContext;
+import okhttp3.OkHttpClient;
 
 import static org.mockito.Mockito.mock;
 
@@ -55,8 +58,26 @@ public class ApplicationTestModule {
 
     @Provides
     @Singleton
+    OkHttpClient provideOkHttpClient() {
+        return mock(OkHttpClient.class);
+    }
+
+    @Provides
+    @Singleton
+    PreferencesHelper providePreferencesHelper() {
+        return mock(PreferencesHelper.class);
+    }
+
+    @Provides
+    @Singleton
     ApiService provideApiService() {
         return mock(ApiService.class);
+    }
+
+    @Provides
+    @Singleton
+    BriteDatabase provideBriteDatabase() {
+        return mock(BriteDatabase.class);
     }
 
 }
