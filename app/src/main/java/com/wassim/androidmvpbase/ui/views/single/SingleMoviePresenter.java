@@ -1,9 +1,13 @@
 package com.wassim.androidmvpbase.ui.views.single;
 
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.local.database.Movie;
 import com.wassim.androidmvpbase.ui.base.BasePresenter;
 
 import javax.inject.Inject;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import timber.log.Timber;
 
 public class SingleMoviePresenter extends BasePresenter<SingleMovieMvp.View>
         implements SingleMovieMvp.Presenter {
@@ -17,30 +21,37 @@ public class SingleMoviePresenter extends BasePresenter<SingleMovieMvp.View>
         this.mProvider = provider;
     }
 
-    void checkFavorites(Movie movie) {
-        Boolean exist = mProvider.verifyMovie(movie.id());
-        if (exist) {
-            if(isViewAttached()) {
-                getMvpView().favoritesChecked(true, false);
+    void getMovie(long movieId) {
+        mProvider.verifyMovie(movieId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Movie>() {
+            @Override
+            public void onCompleted() {
             }
-        } else {
-            if(isViewAttached()) {
-                getMvpView().favoritesChecked(false, false);
+
+            @Override
+            public void onError(Throwable e) {
+                Timber.e("Error verify movie" + e.getMessage());
             }
-        }
+
+            @Override
+            public void onNext(Movie movie) {
+                if (isViewAttached()) {
+                    getMvpView().onMovieLoaded(movie);
+                }
+            }
+        });
+
     }
 
 
     void modifyFavorites(Movie movie) {
-        Boolean exist = mProvider.verifyMovie(movie.id());
-        if (exist) {
-            mProvider.removeMovie(movie);
-            if(isViewAttached()) {
+        if (movie.checked() == 1) {
+            mProvider.uncheck(movie);
+            if (isViewAttached()) {
                 getMvpView().favoritesChecked(false, true);
             }
         } else {
-            mProvider.addMovie(movie);
-            if(isViewAttached()) {
+            mProvider.check(movie);
+            if (isViewAttached()) {
                 getMvpView().favoritesChecked(true, true);
             }
         }

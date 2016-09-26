@@ -1,6 +1,6 @@
 package com.wassim.androidmvpbase.ui.views.main;
 
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.local.database.Movie;
 import com.wassim.androidmvpbase.ui.base.BasePresenter;
 
 import java.util.List;
@@ -16,15 +16,18 @@ public class MainPresenter extends BasePresenter<MainMvp.View>
         implements MainMvp.Presenter{
 
     private final String mTAG = "MainPresenter";
-
     private MainProvider mProvider;
     private CompositeSubscription mCompositeSubscription;
-
 
     @Inject
     MainPresenter(MainProvider provider) {
         mProvider = provider;
         mCompositeSubscription = new CompositeSubscription();
+        mProvider.syncMovies();
+    }
+
+    void syncMovies() {
+        mProvider.syncMovies();
     }
 
     void loadMovies() {

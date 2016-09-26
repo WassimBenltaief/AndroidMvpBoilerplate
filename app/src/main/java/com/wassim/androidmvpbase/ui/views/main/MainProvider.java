@@ -1,7 +1,7 @@
 package com.wassim.androidmvpbase.ui.views.main;
 
 import com.wassim.androidmvpbase.data.DataManager;
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.local.database.Movie;
 import com.wassim.androidmvpbase.ui.base.BaseProvider;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by wassim on 6/23/16.
@@ -24,22 +24,17 @@ public class MainProvider extends BaseProvider<MainMvp.Presenter> {
         this.mDataManager = dataManager;
     }
 
+
     Observable<List<Movie>> getMovies() {
+        return mDataManager.getDatabaseHelper().loadMovies();
+    }
 
-        return mDataManager.getApiService()
+    void syncMovies() {
+        mDataManager.getApiService()
                 .getMovies()
-                .concatMap(new Func1<List<Movie>, Observable<Movie>>() {
-                    @Override
-                    public Observable<Movie> call(List<Movie> movies) {
-                        return mDataManager.getDatabaseHelper().saveMovies(movies);
-                    }
-                })
-                .toList();
-
-        // if async / callback use interface to call presenter :
-        /*if(isPresenterAttached()) {
-            getMvpPresenter().method();
-        }*/
-
+                .subscribeOn(Schedulers.io())
+                .subscribe(movies ->
+                        mDataManager.getDatabaseHelper().saveMovies(movies)
+                );
     }
 }

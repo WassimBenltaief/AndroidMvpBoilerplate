@@ -2,16 +2,15 @@ package com.wassim.androidmvpbase.data.remote;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wassim.androidmvpbase.data.model.GsonAdaptersModel;
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.model.RemoteMovie;
 import com.wassim.androidmvpbase.util.Vars;
 
 import java.util.List;
 
 import okhttp3.OkHttpClient;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
-import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -21,23 +20,22 @@ import rx.Observable;
 public interface ApiService {
 
     @GET("movies.json")
-    Observable<List<Movie>> getMovies();
+    Observable<List<RemoteMovie>> getMovies();
 
     @POST("movies")
-    Observable<Movie> saveMovie();
+    Observable<RemoteMovie> saveMovie();
 
     @PUT("movies")
-    Observable<Movie> updateMovie();
+    Observable<RemoteMovie> updateMovie();
 
     @DELETE("movies")
-    Observable<Movie> deleteMovie();
+    Observable<RemoteMovie> deleteMovie();
 
     class Factory {
         public static ApiService create(OkHttpClient client) {
 
             Gson gson = new GsonBuilder()
                     .serializeNulls()
-                    .registerTypeAdapterFactory(new GsonAdaptersModel())
                     .create();
 
             Retrofit retrofit = new Retrofit.Builder()

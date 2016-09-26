@@ -6,7 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.model.RemoteMovie;
 import com.wassim.androidmvpbase.test.common.TestDataFactory;
 import com.wassim.androidmvpbase.test.common.rules.TestComponentRule;
 import com.wassim.androidmvpbase.ui.views.main.MainActivity;
@@ -45,7 +45,7 @@ public class MainActivityTest {
 
     @Test
     public void shouldbeAbleToLoadMovies(){
-        List<Movie> movies = TestDataFactory.makeMovies();
+        List<RemoteMovie> movies = TestDataFactory.makeMovies();
         /*when(component.getMockDataManager().getMovies())
                 .thenReturn(Observable.just(movies));
         when(component.getMockDataManager().getEventPoster()).thenReturn(new RxEventBusHelper());

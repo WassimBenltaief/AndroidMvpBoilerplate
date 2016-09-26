@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.wassim.androidmvpbase.R;
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.local.database.Movie;
 import com.wassim.androidmvpbase.util.RecyclerViewClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
@@ -61,13 +61,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @Bind(R.id.movie_image)
+        @BindView(R.id.movie_image)
         ImageView movieImage;
-        @Bind(R.id.movie_title)
+        @BindView(R.id.movie_title)
         TextView movieTitle;
-        @Bind(R.id.movie_genre)
+        @BindView(R.id.movie_genre)
         TextView movieGenre;
-        @Bind(R.id.item_container)
+        @BindView(R.id.item_container)
         LinearLayout itemContainer;
 
         public ViewHolder(View itemView) {

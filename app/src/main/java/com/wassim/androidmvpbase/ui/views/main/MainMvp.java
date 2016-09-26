@@ -1,6 +1,6 @@
 package com.wassim.androidmvpbase.ui.views.main;
 
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.local.database.Movie;
 import com.wassim.androidmvpbase.ui.base.MvpView;
 
 import java.util.List;

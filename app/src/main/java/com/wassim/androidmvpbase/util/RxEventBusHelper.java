@@ -1,16 +1,9 @@
 package com.wassim.androidmvpbase.util;
 
-import android.os.Handler;
-import android.os.Looper;
-
-import com.squareup.otto.Bus;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;

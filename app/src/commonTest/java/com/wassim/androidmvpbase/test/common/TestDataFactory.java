@@ -1,7 +1,7 @@
 package com.wassim.androidmvpbase.test.common;
 
 import com.google.gson.Gson;
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.model.RemoteMovie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class TestDataFactory {
         return UUID.randomUUID().toString();
     }
 
-    public static List<Movie> makeMovies(){
+    public static List<RemoteMovie> makeMovies(){
 
         String jsonMovie = "{\n" +
                 "\"id\": 1,\n" +
@@ -41,15 +41,15 @@ public class TestDataFactory {
                 "}";
 
 
-        Movie movie = new Gson().fromJson(jsonMovie, Movie.class);
-        Movie movie2 = new Gson().fromJson(jsonMovie2, Movie.class);
-        List<Movie> mMovies = new ArrayList<>();
+        RemoteMovie movie = new Gson().fromJson(jsonMovie, RemoteMovie.class);
+        RemoteMovie movie2 = new Gson().fromJson(jsonMovie2, RemoteMovie.class);
+        List<RemoteMovie> mMovies = new ArrayList<>();
         mMovies.add(movie);
         mMovies.add(movie2);
         return mMovies;
     }
 
-    public static Movie makeMovie(){
+    public static RemoteMovie makeMovie(){
 
         String jsonMovie = "{\n" +
                 "\"id\": 1,\n" +
@@ -60,7 +60,7 @@ public class TestDataFactory {
                 "\"genre\": \"Action\",\n" +
                 "\"synopsis\": \"A growing nation of genetically evolved apes led by Caesar is threatened by a band of human survivors of the devastating virus unleashed a decade earlier.\"\n" +
                 "}";
-        return new Gson().fromJson(jsonMovie, Movie.class);
+        return new Gson().fromJson(jsonMovie, RemoteMovie.class);
     }
 
 

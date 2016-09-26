@@ -3,7 +3,6 @@ package com.wassim.androidmvpbase.test.common.injection.module;
 import android.app.Application;
 import android.content.Context;
 
-import com.squareup.otto.Bus;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.wassim.androidmvpbase.data.DataManager;
 import com.wassim.androidmvpbase.data.local.preferences.PreferencesHelper;
@@ -40,12 +39,6 @@ public class ApplicationTestModule {
     @ApplicationContext
     Context provideContext() {
         return mApplication;
-    }
-
-    @Provides
-    @Singleton
-    Bus provideEventBus() {
-        return new Bus();
     }
 
     /************* MOCKS *************/

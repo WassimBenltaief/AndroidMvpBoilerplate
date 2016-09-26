@@ -16,9 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.wassim.androidmvpbase.MovieModel;
 import com.wassim.androidmvpbase.R;
-import com.wassim.androidmvpbase.data.model.Movie;
+import com.wassim.androidmvpbase.data.local.database.Movie;
 import com.wassim.androidmvpbase.ui.base.BaseActivity;
 import com.wassim.androidmvpbase.ui.views.single.SingleMovieActivity;
 import com.wassim.androidmvpbase.util.DialogFactory;
@@ -30,7 +29,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements MainMvp.View, RecyclerViewClickListener {
@@ -38,16 +37,16 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
     @Inject
     MainPresenter mPresenter;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.recycler_view)
+    @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    @Bind(R.id.swieRefresh)
+    @BindView(R.id.swieRefresh)
     SwipeRefreshLayout mSwipeContainer;
 
-    private MoviesAdapter mAdapter;
+    private static MoviesAdapter mAdapter;
     private List<Movie> mMovies;
-    private ProgressDialog mProgressDialog;
+    private static ProgressDialog mProgressDialog;
 
     private static final String EXTRA_TRIGGER_SYNC_FLAG =
             "com.wassim.androidmvpbase.ui.views.main.MainActivity.EXTRA_TRIGGER_SYNC_FLAG";
@@ -137,7 +136,7 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
 
     @Override
     public void recyclerViewListClicked(View v, int position, int id) {
-        MovieModel movie = mMovies.get(position);
+        Movie movie = mMovies.get(position);
         Intent intent = new Intent(this, SingleMovieActivity.class);
         intent.putExtra("movie", movie.id());
 

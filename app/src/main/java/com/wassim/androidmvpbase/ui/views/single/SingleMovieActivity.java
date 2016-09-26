@@ -13,14 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wassim.androidmvpbase.R;
-import com.wassim.androidmvpbase.data.model.Movie;
-import com.wassim.androidmvpbase.ui.base.BaseActivity;
 import com.squareup.picasso.Picasso;
+import com.wassim.androidmvpbase.R;
+import com.wassim.androidmvpbase.data.local.database.Movie;
+import com.wassim.androidmvpbase.ui.base.BaseActivity;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -32,24 +32,24 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
     @Inject
     SingleMoviePresenter mPresenter;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.image)
+    @BindView(R.id.image)
     ImageView mImage;
-    @Bind(R.id.collapsing_toolbar)
+    @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbar;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton mFab;
-    @Bind(R.id.movie_genre)
+    @BindView(R.id.movie_genre)
     TextView mMovieGenre;
-    @Bind(R.id.movie_rating)
+    @BindView(R.id.movie_rating)
     TextView mMovieRating;
-    @Bind(R.id.movie_synopsis)
+    @BindView(R.id.movie_synopsis)
     TextView mMovieSynopsis;
-    @Bind(R.id.movie_year)
+    @BindView(R.id.movie_year)
     TextView mMovieYear;
 
-
+    private long mMovieId;
     private Movie mMovie;
     private boolean inFavorites = false;
 
@@ -64,12 +64,10 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle bundle = getIntent().getExtras();
-        mMovie = bundle.getParcelable("movie");
-
+        mMovieId = bundle.getLong("movie");
+        mPresenter.getMovie(mMovieId);
 
         ViewCompat.setTransitionName(mImage, VIEW_NAME_HEADER_IMAGE);
-        mPresenter.checkFavorites(mMovie);
-        loadMovie();
     }
 
     @Override
@@ -83,7 +81,9 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadMovie() {
+    @Override
+    public void onMovieLoaded(Movie movie) {
+        mMovie = movie;
         addTransitionListener();
         loadFullSizeImage();
         mCollapsingToolbar.setTitle(mMovie.title());
@@ -91,6 +91,8 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
         mMovieYear.setText(mMovie.releaseYear() + "");
         mMovieRating.setText(mMovie.rating() + "");
         mMovieSynopsis.setText(mMovie.synopsis());
+
+        favoritesChecked(movie.checked() == 1, false);
 
     }
 

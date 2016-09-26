@@ -5,7 +5,8 @@ CREATE TABLE movie (
 	rating REAL NOT NULL,
 	releaseYear INTEGER NOT NULL,
 	genre TEXT NOT NULL,
-	synopsis TEXT NOT NULL
+	synopsis TEXT NOT NULL, 
+  	checked INTEGER DEFAULT 0 
 );
 
 
