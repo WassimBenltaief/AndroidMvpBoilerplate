@@ -13,9 +13,9 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class MainPresenter extends BasePresenter<MainMvp.View>
-        implements MainMvp.Presenter{
+        implements MainMvp.Presenter {
 
-    private final String mTAG = "MainPresenter";
+    private static final String TAG = MainPresenter.class.getSimpleName();
     private MainProvider mProvider;
     private CompositeSubscription mCompositeSubscription;
 
@@ -23,46 +23,38 @@ public class MainPresenter extends BasePresenter<MainMvp.View>
     MainPresenter(MainProvider provider) {
         mProvider = provider;
         mCompositeSubscription = new CompositeSubscription();
-        mProvider.syncMovies();
-    }
-
-    void syncMovies() {
-        mProvider.syncMovies();
     }
 
     void loadMovies() {
-        if(isViewAttached()){
-            getMvpView().showProgress();
-            mCompositeSubscription.add(mProvider.getMovies()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<List<Movie>>() {
-                        @Override
-                        public void onCompleted() {
+        getMvpView().showProgress();
+        mCompositeSubscription.add(mProvider.getMovies()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<Movie>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (isViewAttached()) {
+                            getMvpView().hideProgress();
+                            getMvpView().showError();
                         }
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-
-                            if (isViewAttached()) {
-                                getMvpView().hideProgress();
-                                getMvpView().showError();
+                    @Override
+                    public void onNext(List<Movie> movies) {
+                        if (isViewAttached()) {
+                            getMvpView().hideProgress();
+                            if (movies.isEmpty()) {
+                                getMvpView().showEmpty();
+                            } else {
+                                getMvpView().showMovies(movies);
                             }
                         }
-
-                        @Override
-                        public void onNext(List<Movie> movies) {
-                            if (isViewAttached()) {
-                                getMvpView().hideProgress();
-                                if (movies.isEmpty()) {
-                                    getMvpView().showEmpty();
-                                } else {
-                                    getMvpView().showMovies(movies);
-                                }
-                            }
-                        }
-                    }));
-        }
+                    }
+                }));
     }
 
     @Override

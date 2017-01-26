@@ -12,7 +12,7 @@ import timber.log.Timber;
 public class SingleMoviePresenter extends BasePresenter<SingleMovieMvp.View>
         implements SingleMovieMvp.Presenter {
 
-    private final String mTAG = "SingleMoviePresenter";
+    private static final String TAG = SingleMoviePresenter.class.getSimpleName();
 
     private SingleMovieProvider mProvider;
 
@@ -34,7 +34,7 @@ public class SingleMoviePresenter extends BasePresenter<SingleMovieMvp.View>
 
             @Override
             public void onNext(Movie movie) {
-                if (isViewAttached()) {
+                if (isViewAttached() && movie != null) {
                     getMvpView().onMovieLoaded(movie);
                 }
             }

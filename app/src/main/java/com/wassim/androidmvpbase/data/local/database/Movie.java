@@ -13,10 +13,10 @@ import com.wassim.androidmvpbase.MovieModel;
 @AutoValue
 public abstract class Movie implements MovieModel, Parcelable {
 
-    public static final Factory<Movie> FACTORY = new Factory<>(AutoValue_Movie::new);
+    static final Factory<Movie> FACTORY = new Factory<>(AutoValue_Movie::new);
 
-    public static final RowMapper<Movie> MAPPER_ALL = FACTORY.select_allMapper();
-    public static final RowMapper<Movie> MAPPER_BY_ID = FACTORY.select_by_idMapper();
-    public static final RowMapper<Movie> TITLE_MAPPER = FACTORY.select_by_titleMapper();
-    public static final RowMapper<Movie> YEAR_MAPPER = FACTORY.select_by_release_yearMapper();
+    static final RowMapper<Movie> MAPPER_ALL = FACTORY.select_allMapper();
+    static final RowMapper<Movie> MAPPER_BY_ID = FACTORY.select_by_idMapper();
+    static final RowMapper<Movie> TITLE_MAPPER = FACTORY.select_by_titleMapper();
+    static final RowMapper<Movie> YEAR_MAPPER = FACTORY.select_by_release_yearMapper();
 }

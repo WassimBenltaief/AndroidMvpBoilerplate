@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class MainActivity extends BaseActivity implements MainMvp.View, RecyclerViewClickListener {
 
@@ -41,20 +42,17 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
     Toolbar mToolbar;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    @BindView(R.id.swieRefresh)
+    @BindView(R.id.swipeRefresh)
     SwipeRefreshLayout mSwipeContainer;
 
-    private static MoviesAdapter mAdapter;
+    private MoviesAdapter mAdapter;
     private List<Movie> mMovies;
     private static ProgressDialog mProgressDialog;
 
-    private static final String EXTRA_TRIGGER_SYNC_FLAG =
-            "com.wassim.androidmvpbase.ui.views.main.MainActivity.EXTRA_TRIGGER_SYNC_FLAG";
-
+    private Unbinder unbinder;
 
     public static Intent getStartIntent(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        return intent;
+        return new Intent(context, MainActivity.class);
     }
 
     @Override
@@ -63,7 +61,8 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
 
         getActivityComponent().inject(this);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
+
         mPresenter.attachView(this);
         mPresenter.attachToProvider();
 
@@ -73,16 +72,16 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
         mProgressDialog.setMessage(getString(R.string.loading));
 
         mAdapter = new MoviesAdapter(this, this);
-        mRecyclerView.addItemDecoration(
-                new DividerItemDecoration(
-                        this, LinearLayoutManager.VERTICAL)
-                );
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(
+                this, LinearLayoutManager.VERTICAL)
+        );
+        mRecyclerView.setNestedScrollingEnabled(true);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mPresenter.loadMovies();
 
-        // end testing Gcm Network manager
+
         mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -94,6 +93,7 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbinder.unbind();
         mPresenter.detachFromProvider();
         mPresenter.detachView();
     }
@@ -115,24 +115,22 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
         hideProgress();
         mMovies = movies;
         mAdapter.setMovies(mMovies);
-        mAdapter.notifyDataSetChanged();
         mSwipeContainer.setRefreshing(false);
     }
 
     @Override
     public void showEmpty() {
         hideProgress();
-        mAdapter.setMovies(Collections.<Movie>emptyList());
-        mAdapter.notifyDataSetChanged();
+        mAdapter.setMovies(Collections.emptyList());
         Toast.makeText(this, R.string.empty_movies, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showError() {
-        hideProgress();
         DialogFactory.createGenericErrorDialog(this, getString(R.string.error_loading_movies))
                 .show();
     }
+
 
     @Override
     public void recyclerViewListClicked(View v, int position, int id) {
@@ -142,9 +140,9 @@ public class MainActivity extends BaseActivity implements MainMvp.View, Recycler
 
         ActivityOptionsCompat activityOptions =
                 ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                new Pair<View, String>(v.findViewById(R.id.movie_image),
-                        SingleMovieActivity.VIEW_NAME_HEADER_IMAGE));
+                        this,
+                        new Pair<View, String>(v.findViewById(R.id.movie_image),
+                                SingleMovieActivity.VIEW_NAME_HEADER_IMAGE));
         ActivityCompat.startActivity(this, intent, activityOptions.toBundle());
 
     }
