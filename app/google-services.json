@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "502394472429",
+    "firebase_url": "https://mvpboilerplate-1ccae.firebaseio.com",
+    "project_id": "mvpboilerplate-1ccae",
+    "storage_bucket": "mvpboilerplate-1ccae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502394472429:android:2f8dc9046cfc3c3b",
+        "android_client_info": {
+          "package_name": "com.wassim.androidmvpbase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502394472429-v9asv594s0b4jhjo9s570ghvu7ke1hvc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wassim.androidmvpbase",
+            "certificate_hash": "D339D56A2AAD69EC0B7A131BEDCF620B5931DC39"
+          }
+        },
+        {
+          "client_id": "502394472429-ma1dqm85t3s2vu6k74hhnn75jcenm13k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5bC0kjnIcbS8eDEnvmjXPkUi1aQeBs_o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502394472429-ma1dqm85t3s2vu6k74hhnn75jcenm13k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
