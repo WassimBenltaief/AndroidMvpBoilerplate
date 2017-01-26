@@ -165,18 +165,18 @@ dependencies {
     provided "com.ryanharter.auto.value:auto-value-parcel:$autoValueParVer"
 
     // Image Loader
-    compile "com.github.bumptech.glide:glide:$glideVer"
-    compile "com.github.bumptech.glide:okhttp-integration:$glideOkHttpIntegration"
+    /*compile "com.github.bumptech.glide:glide:$glideVer"
+    compile "com.github.bumptech.glide:okhttp-integration:$glideOkHttpIntegration"*/
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     // UI
     compile "com.jakewharton:butterknife:$butterKnifeVer"
     apt "com.jakewharton:butterknife-compiler:$butterKnifeVer"
+    compile supportAnnotations
 
     // Other
     compile "com.github.hotchemi:permissionsdispatcher:$permissionsDispatcherVer"
     apt "com.github.hotchemi:permissionsdispatcher-processor:$permissionsDispatcherVer"
-    compile "org.greenrobot:eventbus:$eventBusVer"
 
     // Performance & Debug
     compile "com.facebook.stetho:stetho:$stethoVer"
