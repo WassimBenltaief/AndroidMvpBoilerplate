@@ -3,6 +3,7 @@ package com.wassim.androidmvpbase.ui.views.single;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
@@ -23,6 +24,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.View {
 
@@ -53,12 +55,13 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
     private Movie mMovie;
     private boolean inFavorites = false;
 
+    private Unbinder unbinder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivityComponent().inject(this);
         setContentView(R.layout.activity_single_movie);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         mPresenter.attachView(this);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,7 +85,7 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
     }
 
     @Override
-    public void onMovieLoaded(Movie movie) {
+    public void onMovieLoaded(@NonNull Movie movie) {
         mMovie = movie;
         addTransitionListener();
         loadFullSizeImage();
@@ -91,9 +94,7 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
         mMovieYear.setText(mMovie.releaseYear() + "");
         mMovieRating.setText(mMovie.rating() + "");
         mMovieSynopsis.setText(mMovie.synopsis());
-
         favoritesChecked(movie.checked() == 1, false);
-
     }
 
     private void loadFullSizeImage() {
@@ -104,6 +105,13 @@ public class SingleMovieActivity extends BaseActivity implements SingleMovieMvp.
                 .into(mImage);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+        mPresenter.detachFromProvider();
+        mPresenter.detachView();
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void addTransitionListener() {
